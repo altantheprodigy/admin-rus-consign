@@ -1,28 +1,28 @@
 // eslint-disable-next-line no-unused-vars
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrash } from '@fortawesome/free-solid-svg-icons';
+import { getMovieList } from "../../../Api/Api.jsx";
 
 function TableComponent() {
-    const generateData = () => {
-        let generatedData = [];
-        for (let i = 1; i <= 50; i++) {
-            generatedData.push({
-                id: i,
-                name: `Produk ${i}`,
-                mitra: `Mitra ${i}`,
-                desc: `Deskripsi Produk ${i}`,
-                rating: '4,5',
-                price: '$10',
-                category: "Produk",
-                action: <FontAwesomeIcon icon={faTrash} />,
-            });
-        }
-        return generatedData;
-    };
+    const [popularMovies, setPopularMovies] = useState([]);
 
-    const data = generateData();
+    useEffect(() => {
+        const fetchMovies = async () => {
+            try {
+                const result = await getMovieList();
+                if (result && result.results) {
+                    setPopularMovies(result.results);
+                } else {
+                    console.error("Invalid movie data structure:", result);
+                }
+            } catch (error) {
+                console.error("Error fetching movie list:", error);
+            }
+        };
 
+        fetchMovies();
+    }, []);
 
     return (
         <div className="table-auto overflow-auto h-[535px]">
@@ -30,26 +30,22 @@ function TableComponent() {
                 <thead>
                 <tr>
                     <th className="table-header">ID</th>
-                    <th className="table-header">Nama Produk</th>
-                    <th className="table-header">Deskripsi Produk</th>
-                    <th className="table-header">Mitra</th>
-                    <th className="table-header">Harga</th>
-                    <th className="table-header">Category</th>
+                    <th className="table-header">Title</th>
+                    <th className="table-header">Overview</th>
+                    <th className="table-header">Release Date</th>
                     <th className="table-header">Rating</th>
                     <th className="table-header">Action</th>
                 </tr>
                 </thead>
                 <tbody>
-                {data.map((item) => (
-                    <tr key={item.id} className="hover:bg-gray-100">
-                        <td className="py-2 px-4 border border-gray-300 text-center">{item.id}</td>
-                        <td className="table-down">{item.name}</td>
-                        <td className="table-down">{item.desc}</td>
-                        <td className="table-down">{item.mitra}</td>
-                        <td className="table-down">{item.price}</td>
-                        <td className="table-down">{item.category}</td>
-                        <td className="table-down">{item.rating}</td>
-                        <td className="table-down text-[#FD0404]">{item.action}</td>
+                {popularMovies.map((movie) => (
+                    <tr key={movie.id} className="hover:bg-gray-100">
+                        <td className="py-2 px-4 border border-gray-300 text-center">{movie.id}</td>
+                        <td className="table-down">{movie.title}</td>
+                        <td className="table-down">{movie.overview}</td>
+                        <td className="table-down">{movie.release_date}</td>
+                        <td className="table-down">{movie.vote_average}</td>
+                        <td className="table-down text-[#FD0404]"><FontAwesomeIcon icon={faTrash} /></td>
                     </tr>
                 ))}
                 </tbody>
