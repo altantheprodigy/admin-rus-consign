@@ -8,8 +8,20 @@ export const getUserList = async () => {
             `${baseLink}/api/mitra`
         );
         return response.data;
-    } catch (error){
-        console.error("Eror Fetching Data User", error);
-        throw error
+    } catch (error) {
+        console.error("Error Fetching Data User", error);
+        throw error;
+    }
+}
+
+export const acceptUser = async (id) => {
+    try {
+        const response = await axios.put(
+            `${baseLink}/api/accept/${id}`
+        );
+        return response.data; // Assuming the response contains accepted user data
+    } catch (error) {
+        console.error("Error accepting user:", error);
+        throw error;
     }
 }

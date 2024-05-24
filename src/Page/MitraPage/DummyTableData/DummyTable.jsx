@@ -1,28 +1,45 @@
 // eslint-disable-next-line no-unused-vars
 import React, {useEffect, useState} from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faTrash, faImage  } from '@fortawesome/free-solid-svg-icons';
-import {getUserList} from "../../../Api/ApiUser.jsx";
+import { faImage ,faCheckCircle, faCircleXmark } from '@fortawesome/free-solid-svg-icons';
+import { acceptUser, getUserList } from '../../../Api/ApiUser.jsx';
 
 function TableComponent() {
 
-    const [user, setUser] = useState([])
+    const [user, setUsers] = useState([]);
 
     useEffect(() => {
-        const fetchUser = async () => {
-            try {
-                const result = await getUserList();
-                if (result && result.data){
-                    setUser(result.data)
-                } else {
-                    console.error("Invalid movie data structure:", result)
-                }
-            } catch (eror) {
-                console.error("Eror fetching data user", eror)
-            }
-        };
-        fetchUser()
+        fetchUserList();
     }, []);
+
+    const fetchUserList = async () => {
+        try {
+            const result = await getUserList();
+            if (result && result.data) {
+                setUsers(result.data);
+            } else {
+                console.error("Invalid user data structure:", result);
+            }
+        } catch (error) {
+            console.error("Error fetching user data:", error);
+        }
+    };
+
+    const handleAcceptUser = async (id) => {
+        try {
+            const isConfirmed = window.confirm("Apakah Anda yakin ingin menerima pengguna ini?");
+
+            if (isConfirmed) {
+                await acceptUser(id);
+                alert("Pengguna telah diterima!");
+                fetchUserList()
+            } else {
+                console.log("Penerimaan pengguna dibatalkan.");
+            }
+        } catch (error) {
+            console.error("Error handling accepted user:", error);
+        }
+    }
 
 
     // const generateData = () => {
@@ -71,7 +88,14 @@ function TableComponent() {
                         <td className="table-down">{item.jumlahjasa}</td>
                         <td className="table-down">{item.status}</td>
                         <td className="table-down"><FontAwesomeIcon icon={faImage}/></td>
-                        <td className="table-down text-[#FD0404]"><FontAwesomeIcon icon={faTrash}/></td>
+                        <td className="table-down text-[#FD0404]">
+                            <button onClick={() => handleAcceptUser(item.id)}>
+                                <FontAwesomeIcon icon={faCheckCircle}/>
+                            </button>
+                            <button className={"ml-4"}>
+                                <FontAwesomeIcon icon={faCircleXmark}/>
+                            </button>
+                        </td>
                     </tr>
                 ))}
                 </tbody>
