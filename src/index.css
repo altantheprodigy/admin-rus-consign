@@ -1,0 +1,28 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+@layer components {
+    .hover-card {
+        @apply w-10 h-10 m-auto  text-[#FF3D3D];
+    }
+}
+
+@layer components{
+    .text-sideBar {
+        @apply font-semibold text-[1.5xl];
+    }
+}
+
+@layer components{
+    .table-header{
+        @apply py-2 px-4 border border-gray-300 bg-[#FF3D3D] text-amber-50;
+    }
+}
+
+@layer components{
+    .table-down{
+        @apply py-2 px-4 border border-gray-300 w-screen text-center;
+    }
+}
