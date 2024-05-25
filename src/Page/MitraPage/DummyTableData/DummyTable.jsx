@@ -2,7 +2,7 @@
 import React, {useEffect, useState} from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faImage ,faCheckCircle, faCircleXmark } from '@fortawesome/free-solid-svg-icons';
-import { acceptUser, getUserList } from '../../../Api/ApiUser.jsx';
+import { acceptUser, getMitraList } from '../../../Api/ApiMitra.jsx';
 
 function TableComponent() {
 
@@ -14,14 +14,14 @@ function TableComponent() {
 
     const fetchUserList = async () => {
         try {
-            const result = await getUserList();
+            const result = await getMitraList();
             if (result && result.data) {
                 setUsers(result.data);
             } else {
-                console.error("Invalid user data structure:", result);
+                console.error("Invalid Mitra data structure:", result);
             }
         } catch (error) {
-            console.error("Error fetching user data:", error);
+            console.error("Error fetching Mitra data:", error);
         }
     };
 
@@ -42,22 +42,6 @@ function TableComponent() {
     }
 
 
-    // const generateData = () => {
-    //     let generatedData = [];
-    //     for (let i = 1; i <= 50; i++) {
-    //         generatedData.push({
-    //             id: i,
-    //             name: `User ${i}`,
-    //             email: `NIS ${i}`,
-    //             password: `Dompet Digital ${i}`,
-    //             foto: <FontAwesomeIcon icon={faImage} />,
-    //             action: <FontAwesomeIcon icon={faTrash} />,
-    //         });
-    //     }
-    //     return generatedData;
-    // };
-    //
-    // const data = generateData();
 
 
     return (
