@@ -18,10 +18,10 @@ export const getMovieList = async () => {
 };
 
 
-export const searchMovie = async (query) => {
+export const searchMovie = async (q) => {
     try {
         const response = await axios.get(
-            `${baseUrl}/search/movie?api_key=${apikey}&query=${query}`
+            `${baseUrl}/search/movie?query=${q}&api_key=${apikey}`
         );
         return response.data; // Returning the data property
     } catch (error) {

@@ -25,3 +25,15 @@ export const acceptUser = async (id) => {
         throw error;
     }
 }
+
+export const deleteMitra = async (id) => {
+    try {
+        const response = await axios.delete(
+            `${baseLink}/api/mitras/${id}`
+        );
+        return response.data
+    } catch (e) {
+        console.error("Eror Delete Mitra", e)
+        throw e;
+    }
+}

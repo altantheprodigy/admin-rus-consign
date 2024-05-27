@@ -12,3 +12,15 @@ export const getUserList = async () => {
         throw e;
     }
 }
+
+export const deleteUser = async (id) => {
+    try {
+        const response = await axios.delete(
+            `${baseLink}/api/users/${id}`
+        );
+        return response.data;
+    } catch (e) {
+        console.error("Eror Delete Data User", e)
+        throw e;
+    }
+}
