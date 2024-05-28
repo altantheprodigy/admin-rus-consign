@@ -4,6 +4,7 @@ import axios from "axios";
 
 const apikey = import.meta.env.VITE_APP_APIKEY;
 const baseUrl = import.meta.env.VITE_APP_BASELINK;
+const baseLink = import.meta.env.VITE_APP_BASEURL
 
 export const getMovieList = async () => {
     try {
@@ -28,3 +29,14 @@ export const searchMovie = async (q) => {
         console.error("Error searching movie:", error);
     }
 };
+
+export const getProduk = async () => {
+    try {
+        const response = await axios.get(
+            `${baseLink}/api/product`
+        );
+        return response.data;
+    } catch (e) {
+        console.error("Eror Fetching Product")
+    }
+}

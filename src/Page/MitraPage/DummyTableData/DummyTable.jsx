@@ -2,18 +2,13 @@
 import React, {useEffect, useState} from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {faImage, faCheckCircle, faCircleXmark, faTrash} from '@fortawesome/free-solid-svg-icons';
-import {acceptUser, deleteMitra, getMitraList} from '../../../Api/ApiMitra.jsx';
+import {acceptUser, deleteMitra, getMitraList, searchMitra} from '../../../Api/ApiMitra.jsx';
 import {utils, writeFile} from "xlsx";
 
 const baseImageUrl = import.meta.env.VITE_APP_BASEIMG;
 
 function TableComponent() {
 
-    const [inputValue, setInputValue] = useState('');
-
-    const handleInputChange = (event) => {
-        setInputValue(event.target.value);
-    };
 
     const [user, setUsers] = useState([]);
 
@@ -78,6 +73,16 @@ function TableComponent() {
         writeFile(wb, "Data Mitra.xlsx");
     }
 
+    const search = async (q) => {
+        if (q.length > 3) {
+            const query = await searchMitra(q)
+            setUsers(query.data)
+            console.log({query: query})
+        } else {
+            fetchUserList()
+        }
+    }
+
     return (
         <>
             <div className={"mb-5"}>
@@ -90,8 +95,7 @@ function TableComponent() {
                     type="text"
                     className="mr-5 w-[300px] p-3 border border-gray-300 rounded-[10px] shadow-custom-light focus:outline-none focus:ring-2 focus:ring-blue-500"
                     placeholder="Cari Item Berdasarkan nama atau kode barang"
-                    value={inputValue}
-                    onChange={handleInputChange}
+                    onChange={({target}) => search(target.value)}
                 />
                 <button onClick={handleOnExport}>
                     <div

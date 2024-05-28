@@ -37,3 +37,15 @@ export const deleteMitra = async (id) => {
         throw e;
     }
 }
+
+export const searchMitra = async (q) => {
+    try {
+        const response = await axios.get(
+            `${baseLink}/public/api/mitra?username=${q}`
+        );
+        return response.data
+    } catch (e) {
+        console.error("Eror searching Mitra", e);
+        throw e
+    }
+}

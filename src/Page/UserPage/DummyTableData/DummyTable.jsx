@@ -1,17 +1,12 @@
 // eslint-disable-next-line no-unused-vars
 import React, {useEffect, useState} from 'react';
-import {deleteUser, getUserList} from "../../../Api/ApiUser.jsx";
+import {deleteUser, getUserList, searchUser} from "../../../Api/ApiUser.jsx";
 import {faTrash} from "@fortawesome/free-solid-svg-icons";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import { utils, writeFile } from "xlsx";
 
 function TableComponent() {
 
-    const [inputValue, setInputValue] = useState('');
-
-    const handleInputChange = (event) => {
-        setInputValue(event.target.value);
-    };
 
 
     const [pengguna, setPengguna] = useState([]);
@@ -62,7 +57,15 @@ function TableComponent() {
         writeFile(wb, "Data User.xlsx");
     }
 
-
+    const search = async (q) => {
+        if (q.length >3){
+            const query = await searchUser(q)
+            setPengguna(query)
+            console.log({query: query})
+        } else {
+            fetchPengguna()
+        }
+    }
 
     return (
         <>
@@ -76,8 +79,7 @@ function TableComponent() {
                     type="text"
                     className="mr-5 w-[300px] p-3 border border-gray-300 rounded-[10px] shadow-custom-light focus:outline-none focus:ring-2 focus:ring-blue-500"
                     placeholder="Cari Item Berdasarkan nama atau kode barang"
-                    value={inputValue}
-                    onChange={handleInputChange}
+                    onChange={({target}) => search(target.value)}
                 />
                 <button onClick={handleOnExport}>
                     <div

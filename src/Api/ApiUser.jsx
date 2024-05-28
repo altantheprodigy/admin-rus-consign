@@ -24,3 +24,14 @@ export const deleteUser = async (id) => {
         throw e;
     }
 }
+
+export const searchUser = async (q) => {
+    try {
+        const response = await axios.get(
+            `${baseLink}/public/api/users?username=${q}`
+        );
+        return response.data; // Returning the data property
+    } catch (error) {
+        console.error("Error searching User:", error);
+    }
+};

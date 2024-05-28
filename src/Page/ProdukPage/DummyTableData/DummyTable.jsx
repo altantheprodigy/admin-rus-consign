@@ -2,38 +2,63 @@
 import React, { useEffect, useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrash } from '@fortawesome/free-solid-svg-icons';
-import {getMovieList, searchMovie} from "../../../Api/Api.jsx";
+import {getMovieList, getProduk, searchMovie} from "../../../Api/Api.jsx";
+import {utils, writeFile} from "xlsx";
 
 function TableComponent() {
-    const [selectedOption, setSelectedOption] = useState('');
-
-    const handleSelectChange = (event) => {
-        setSelectedOption(event.target.value);
-    };
     const [popularMovies, setPopularMovies] = useState([]);
+    const [produk, setProduk] = useState([])
 
     useEffect(() => {
-        const fetchMovies = async () => {
-            try {
-                const result = await getMovieList();
-                if (result && result.results) {
-                    setPopularMovies(result.results);
-                } else {
-                    console.error("Invalid movie data structure:", result);
-                }
-            } catch (error) {
-                console.error("Error fetching movie list:", error);
-            }
-        };
-
-        fetchMovies();
+        fetchProdukList()
+        // const fetchMovies = async () => {
+        //     try {
+        //         const result = await getMovieList();
+        //         if (result && result.results) {
+        //             setPopularMovies(result.results);
+        //         } else {
+        //             console.error("Invalid movie data structure:", result);
+        //         }
+        //     } catch (error) {
+        //         console.error("Error fetching movie list:", error);
+        //     }
+        // };
+        //
+        // fetchMovies();
     }, []);
+
+
+    const fetchProdukList = async () => {
+        try {
+            const result = await getProduk();
+            if (result && result.data) {
+                setProduk(result.data)
+            } else {
+                console.error("Invalid Produk data structutre")
+            }
+        } catch (e) {
+            console.error("Eror Fetching Produk data", e)
+        }
+    }
+
     const search = async (q) => {
         if (q.length >3){
             const query = await searchMovie(q)
             setPopularMovies(query.results)
             console.log({query: query})
         }
+    }
+
+
+    const handleOnExport = () => {
+        // console.log(pengguna)
+
+        var wb = utils.book_new(),
+            ws = utils.json_to_sheet((produk));
+
+        utils.book_append_sheet(wb, ws, "SheetUser");
+
+        writeFile(wb, "Data Produk.xlsx");
     }
     return (
         <>
@@ -47,16 +72,17 @@ function TableComponent() {
                     placeholder="Cari Item Berdasarkan nama atau kode barang"
                     onChange={({target}) => search(target.value)}
                 />
-                <select
-                    className="mt-4 px-2 py-2 shadow-custom-dark rounded-[10px] h-[60px] w-[200px] focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    value={selectedOption}
-                    onChange={handleSelectChange}
-                >
-                    <option value="" disabled>Category</option>
-                    <option value="produk1">Produk 1</option>
-                    <option value="produk2">Produk 2</option>
-                    <option value="produk3">Produk 3</option>
-                </select>
+                <button onClick={handleOnExport}>
+                    <div
+                        className="px-5 py-5 flex flex-row items-center gap-2.5 border border-gray-300 rounded-[10px] shadow-custom-dark h-[50px] w-[150px]">
+                        <p className={"font-semibold"}>Download</p>
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5}
+                             stroke="currentColor" className="w-6 h-6">
+                            <path strokeLinecap="round" strokeLinejoin="round"
+                                  d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5M16.5 12 12 16.5m0 0L7.5 12m4.5 4.5V3"/>
+                        </svg>
+                    </div>
+                </button>
             </div>
             <div className="table-auto overflow-auto h-[535px]">
                 <table
@@ -64,21 +90,23 @@ function TableComponent() {
                     <thead>
                     <tr>
                         <th className="table-header">ID</th>
-                        <th className="table-header">Title</th>
-                        <th className="table-header">Overview</th>
-                        <th className="table-header">Release Date</th>
-                        <th className="table-header">Rating</th>
+                        <th className="table-header">Nama Produk</th>
+                        <th className="table-header">Deskripsi</th>
+                        <th className="table-header">Harga</th>
+                        <th className="table-header">Image</th>
+                        <th className="table-header">ID Mitra</th>
                         <th className="table-header">Action</th>
                     </tr>
                     </thead>
                     <tbody>
-                    {popularMovies.map((movie) => (
-                        <tr key={movie.id} className="hover:bg-gray-100">
-                            <td className="py-2 px-4 border border-gray-300 text-center">{movie.id}</td>
-                            <td className="table-down">{movie.title}</td>
-                            <td className="table-down">{movie.overview}</td>
-                            <td className="table-down">{movie.release_date}</td>
-                            <td className="table-down">{movie.vote_average}</td>
+                    {produk.map((produk) => (
+                        <tr key={produk.id} className="hover:bg-gray-100">
+                            <td className="py-2 px-4 border border-gray-300 text-center">{produk.id}</td>
+                            <td className="table-down">{produk.nama_product}</td>
+                            <td className="table-down">{produk.deskripsi}</td>
+                            <td className="table-down">{produk.harga}</td>
+                            <td className="table-down"><img src={produk.image} className="w-20 h-20 object-cover"/></td>
+                            <td className="table-down">{produk.id_mitra}</td>
                             <td className="table-down text-[#FD0404]"><FontAwesomeIcon icon={faTrash}/></td>
                         </tr>
                     ))}
