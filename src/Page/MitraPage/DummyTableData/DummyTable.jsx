@@ -121,6 +121,7 @@ function TableComponent() {
                         {/*<th className="table-header">Nama Toko</th>*/}
                         <th className="table-header">Jumlah Product</th>
                         <th className="table-header">Jumlah Jasa</th>
+                        <th className="table-header">Email</th>
                         <th className="table-header">Status</th>
                         <th className="table-header">Foto ID Card</th>
                         <th className="table-header">Action</th>
@@ -139,6 +140,7 @@ function TableComponent() {
                                 <td className="table-down">{item.nomor}</td>
                                 <td className="table-down">{item.jumlahproduct}</td>
                                 <td className="table-down">{item.jumlahjasa}</td>
+                                <td className="table-down">{item.email}</td>
                                 <td className="table-down">{item.status}</td>
                                 <td className="table-down">
                                     <img src={imageUrl} alt={item.nama} className="w-20 h-20 object-cover"/>

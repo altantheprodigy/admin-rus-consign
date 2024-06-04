@@ -33,7 +33,7 @@ export const searchMovie = async (q) => {
 export const getProduk = async () => {
     try {
         const response = await axios.get(
-            `${baseLink}/api/product`
+            `${baseLink}/api/barang`
         );
         return response.data;
     } catch (e) {

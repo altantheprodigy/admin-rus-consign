@@ -6,6 +6,9 @@ import {getMovieList, getProduk, searchMovie} from "../../../Api/Api.jsx";
 import {utils, writeFile} from "xlsx";
 
 function TableComponent() {
+
+    const baseImageUrl = import.meta.env.VITE_APP_BASEIMG;
+
     const [popularMovies, setPopularMovies] = useState([]);
     const [produk, setProduk] = useState([])
 
@@ -31,8 +34,8 @@ function TableComponent() {
     const fetchProdukList = async () => {
         try {
             const result = await getProduk();
-            if (result && result.data) {
-                setProduk(result.data)
+            if (result && result.barangs) {
+                setProduk(result.barangs)
             } else {
                 console.error("Invalid Produk data structutre")
             }
@@ -99,17 +102,22 @@ function TableComponent() {
                     </tr>
                     </thead>
                     <tbody>
-                    {produk.map((produk) => (
-                        <tr key={produk.id} className="hover:bg-gray-100">
-                            <td className="py-2 px-4 border border-gray-300 text-center">{produk.id}</td>
-                            <td className="table-down">{produk.nama_product}</td>
-                            <td className="table-down">{produk.deskripsi}</td>
-                            <td className="table-down">{produk.harga}</td>
-                            <td className="table-down"><img src={produk.image} className="w-20 h-20 object-cover"/></td>
-                            <td className="table-down">{produk.id_mitra}</td>
-                            <td className="table-down text-[#FD0404]"><FontAwesomeIcon icon={faTrash}/></td>
-                        </tr>
-                    ))}
+                    {produk.map((produk) => {
+                        const imageUrl = `${baseImageUrl}${produk.image_barang}`;
+                        return (
+                            <tr key={produk.id} className="hover:bg-gray-100">
+                                <td className="py-2 px-4 border border-gray-300 text-center">{produk.id}</td>
+                                <td className="table-down">{produk.nama_barang}</td>
+                                <td className="table-down">{produk.deskripsi}</td>
+                                <td className="table-down">{produk.harga}</td>
+                                <td className="table-down">
+                                    <img src={imageUrl} alt={produk.nama_barang} className="w-20 h-20 object-cover"/>
+                                </td>
+                                <td className="table-down">{produk.mitra.id}</td>
+                                <td className="table-down text-[#FD0404]"><FontAwesomeIcon icon={faTrash}/></td>
+                            </tr>
+                        );
+                    })}
                     </tbody>
                 </table>
             </div>

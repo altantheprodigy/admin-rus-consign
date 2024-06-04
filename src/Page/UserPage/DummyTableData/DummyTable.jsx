@@ -58,13 +58,17 @@ function TableComponent() {
     }
 
     const search = async (q) => {
-        if (q.length >3){
-            const query = await searchUser(q)
-            setPengguna(query)
-            console.log({query: query})
-        } else {
-            fetchPengguna()
-        }
+       try {
+           if (q.length >3){
+               const query = await searchUser(q)
+               setPengguna(query)
+               console.log({query: query})
+           } else {
+               fetchPengguna();
+           }
+       } catch (e) {
+           console.error("Eror Search Data", e)
+       }
     }
 
     return (
@@ -101,17 +105,19 @@ function TableComponent() {
                         <th className="table-header">ID</th>
                         <th className="table-header">Username</th>
                         <th className="table-header">Email</th>
+                        <th className="table-header">Mitra_ID</th>
                         <th className="table-header">Action</th>
                     </tr>
                     </thead>
                     <tbody>
                     {pengguna.map((item) => (
-                        <tr key={item.user_id} className="hover:bg-gray-100">
-                            <td className="py-2 px-4 border border-gray-300 text-center">{item.user_id}</td>
+                        <tr key={item.id} className="hover:bg-gray-100">
+                            <td className="py-2 px-4 border border-gray-300 text-center">{item.id}</td>
                             <td className="table-down">{item.name}</td>
                             <td className="table-down">{item.email}</td>
+                            <td className="table-down">{item.mitra_id}</td>
                             <td className="table-down text-[#FD0404]">
-                                <button onClick={() => handleDeleteUser(item.user_id)}>
+                                <button onClick={() => handleDeleteUser(item.id)}>
                                     <FontAwesomeIcon icon={faTrash}/>
                                 </button>
                             </td>
