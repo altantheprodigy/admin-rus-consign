@@ -87,7 +87,7 @@ function TableComponent() {
                     </div>
                 </button>
             </div>
-            <div className="table-auto overflow-auto h-[535px]">
+            <div className="table-auto overflow-auto h-[670px]">
                 <table
                     className="min-w-full bg-white border-collapse border border-gray-300 rounded-lg shadow-custom-light">
                     <thead>
