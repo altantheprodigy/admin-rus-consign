@@ -40,3 +40,15 @@ export const getProduk = async () => {
         console.error("Eror Fetching Product")
     }
 }
+
+export const acceptProduk = async (id) => {
+    try {
+        const response = await axios.put(
+            `${baseLink}/api/publish/${id}`
+        );
+        return response.data;
+    } catch (e) {
+        console.error("Eror Accepting Barang: ", e);
+        throw e;
+    }
+}

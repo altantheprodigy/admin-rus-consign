@@ -1,8 +1,8 @@
 // eslint-disable-next-line no-unused-vars
 import React, { useEffect, useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faTrash } from '@fortawesome/free-solid-svg-icons';
-import {getMovieList, getProduk, searchMovie} from "../../../Api/Api.jsx";
+import {faCheckCircle, faCircleXmark, faTrash} from '@fortawesome/free-solid-svg-icons';
+import {acceptProduk, getMovieList, getProduk, searchMovie} from "../../../Api/Api.jsx";
 import {utils, writeFile} from "xlsx";
 
 function TableComponent() {
@@ -52,6 +52,22 @@ function TableComponent() {
         }
     }
 
+    const handleAcceptBarang = async (id) => {
+        try {
+            const isConfirmed = window.confirm("Apakah anda yakin ingin publish barang?")
+
+            if (isConfirmed) {
+                await acceptProduk(id)
+                alert("Barang Telah Di publish");
+                fetchProdukList()
+            } else {
+                console.log("publish barang dibatalkan")
+            }
+        } catch (e) {
+            console.error("eror handling publish barang: ", e)
+        }
+    }
+
 
     const handleOnExport = () => {
         // console.log(pengguna)
@@ -96,8 +112,10 @@ function TableComponent() {
                         <th className="table-header">Nama Produk</th>
                         <th className="table-header">Deskripsi</th>
                         <th className="table-header">Harga</th>
+                        <th className="table-header">Status</th>
                         <th className="table-header">Image</th>
                         <th className="table-header">ID Mitra</th>
+                        <th className="table-header">Accept</th>
                         <th className="table-header">Action</th>
                     </tr>
                     </thead>
@@ -110,10 +128,19 @@ function TableComponent() {
                                 <td className="table-down">{produk.nama_barang}</td>
                                 <td className="table-down">{produk.deskripsi}</td>
                                 <td className="table-down">{produk.harga}</td>
+                                <td className="table-down">{produk.status}</td>
                                 <td className="table-down">
                                     <img src={imageUrl} alt={produk.nama_barang} className="w-20 h-20 object-cover"/>
                                 </td>
                                 <td className="table-down">{produk.mitra.id}</td>
+                                <td className="table-down text-[#FD0404]">
+                                    <button onClick={() => handleAcceptBarang(produk.id)} >
+                                        <FontAwesomeIcon icon={faCheckCircle}/>
+                                    </button>
+                                    <button className={"ml-4"}>
+                                        <FontAwesomeIcon icon={faCircleXmark}/>
+                                    </button>
+                                </td>
                                 <td className="table-down text-[#FD0404]"><FontAwesomeIcon icon={faTrash}/></td>
                             </tr>
                         );
