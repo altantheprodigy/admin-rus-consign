@@ -8,8 +8,6 @@ const ProtectedRoute = ({ children }) => {
     // If there is no token, redirect to the login page
     if (!authToken) {
         return <Navigate to="/" />;
-    } else {
-        return <Navigate to="/transaksi" />;
     }
 
     // If there is a token, allow access to the page
