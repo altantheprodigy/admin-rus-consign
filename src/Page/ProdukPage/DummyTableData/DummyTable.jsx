@@ -122,6 +122,7 @@ function TableComponent() {
                     <tbody>
                     {produk.map((produk) => {
                         const imageUrl = `${baseImageUrl}${produk.image_barang}`;
+                        console.log(imageUrl)
                         return (
                             <tr key={produk.id} className="hover:bg-gray-100">
                                 <td className="py-2 px-4 border border-gray-300 text-center">{produk.id}</td>

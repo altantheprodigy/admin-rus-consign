@@ -19,6 +19,8 @@ function TableComponent() {
         try {
             const result = await getUserList();
             console.log("Fetched user data:", result);
+            const token = localStorage.getItem('authToken');
+            console.log("token user adlah", token)
             if (Array.isArray(result)) {
                 setPengguna(result);
             } else {

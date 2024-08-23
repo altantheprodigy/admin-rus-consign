@@ -4,7 +4,7 @@ function SideBarComponent() {
     return (
         <div className={"border-[#FF3D3D] border-4 rounded-lg w-[115px] h-[95vh] pt-20 space-y-12 px-10"}>
             <img src="/logo.png" alt="Logo" className="hover-card"/>
-            <a href={"/"} className={"flex flex-col items-center"}>
+            <a href={"/transaksi"} className={"flex flex-col items-center"}>
                 <div>
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5}
                          stroke="currentColor" className="hover-card">
