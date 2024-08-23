@@ -105,7 +105,7 @@ function TableComponent() {
                         <th className="table-header">ID</th>
                         <th className="table-header">Username</th>
                         <th className="table-header">Email</th>
-                        <th className="table-header">Mitra_ID</th>
+                        {/*<th className="table-header">Mitra_ID</th>*/}
                         <th className="table-header">Action</th>
                     </tr>
                     </thead>
@@ -115,7 +115,7 @@ function TableComponent() {
                             <td className="py-2 px-4 border border-gray-300 text-center">{item.id}</td>
                             <td className="table-down">{item.name}</td>
                             <td className="table-down">{item.email}</td>
-                            <td className="table-down">{item.mitra_id}</td>
+                            {/*<td className="table-down">{item.mitra_id}</td>*/}
                             <td className="table-down text-[#FD0404]">
                                 <button onClick={() => handleDeleteUser(item.id)}>
                                     <FontAwesomeIcon icon={faTrash}/>
