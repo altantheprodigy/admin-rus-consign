@@ -12,41 +12,10 @@ function Routing() {
     return (
         <Router>
             <Routes>
-                {/* Protected routes */}
-                <Route
-                    path="/produk"
-                    element={
-                        <ProtectedRoute>
-                            <ProdukPage />
-                        </ProtectedRoute>
-                    }
-                />
-                <Route
-                    path="/user"
-                    element={
-                        <ProtectedRoute>
-                            <UserPage />
-                        </ProtectedRoute>
-                    }
-                />
-                <Route
-                    path="/mitra"
-                    element={
-                        <ProtectedRoute>
-                            <MitraPage />
-                        </ProtectedRoute>
-                    }
-                />
-                <Route
-                    path="/transaksi"
-                    element={
-                        <ProtectedRoute>
-                            <TransactionHistory />
-                        </ProtectedRoute>
-                    }
-                />
-
-                {/* Public routes */}
+                <Route path="/produk" element={<ProtectedRoute><ProdukPage /></ProtectedRoute>} />
+                <Route path="/user" element={<ProtectedRoute><UserPage /></ProtectedRoute>} />
+                <Route path="/mitra" element={<ProtectedRoute><MitraPage /></ProtectedRoute>} />
+                <Route path="/transaksi" element={<ProtectedRoute><TransactionHistory /></ProtectedRoute>} />
                 <Route path="/" element={<LoginPageAdmin />} />
                 <Route path="/register" element={<RegisterAdminPage />} />
             </Routes>

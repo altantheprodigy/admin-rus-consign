@@ -5,6 +5,7 @@ import axios from "axios";
 const apikey = import.meta.env.VITE_APP_APIKEY;
 const baseUrl = import.meta.env.VITE_APP_BASELINK;
 const baseLink = import.meta.env.VITE_APP_BASEURL
+const token = localStorage.getItem('authToken');
 
 export const getMovieList = async () => {
     try {
@@ -33,7 +34,12 @@ export const searchMovie = async (q) => {
 export const getProduk = async () => {
     try {
         const response = await axios.get(
-            `${baseLink}/api/barang`
+            `${baseLink}/api/barang`,
+        {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        }
         );
         return response.data;
     } catch (e) {
