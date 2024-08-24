@@ -1,11 +1,17 @@
 import axios from "axios";
 
 const baseLink = import.meta.env.VITE_APP_BASEURL
+const token = localStorage.getItem('authToken');
 
 export const getMitraList = async () => {
     try {
         const response = await axios.get(
-            `${baseLink}/api/mitra`
+            `${baseLink}/api/mitra`,
+            {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            }
         );
         return response.data;
     } catch (error) {
