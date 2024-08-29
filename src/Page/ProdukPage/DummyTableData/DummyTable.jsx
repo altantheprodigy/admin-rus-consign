@@ -133,9 +133,11 @@ function TableComponent() {
                                 <td className="table-down">{produk.deskripsi}</td>
                                 <td className="table-down">{produk.harga}</td>
                                 <td className="table-down">{produk.status}</td>
-                                <a href={imageUrl} target="_blank" rel="noopener noreferrer">
-                                    <img src={imageUrl} alt={produk.nama} className="w-20 h-20 object-cover"/>
-                                </a>
+                                <td className="table-down"  >
+                                    <a href={imageUrl} target="_blank" rel="noopener noreferrer">
+                                        <img src={imageUrl} alt={produk.nama} className="w-20 h-20 object-cover"/>
+                                    </a>
+                                </td>
                                 <td className="table-down">{produk.mitra.nama_toko}</td>
                                 <td className="table-down text-[#FD0404]">
                                     {produk.status == 'pending' ? (
