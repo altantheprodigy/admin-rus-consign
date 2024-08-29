@@ -1,15 +1,18 @@
-// eslint-disable-next-line no-unused-vars
 import React, {useEffect, useState} from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import {faImage, faCheckCircle, faCircleXmark, faTrash} from '@fortawesome/free-solid-svg-icons';
-import {acceptUser, deleteMitra, getMitraList, searchMitra} from '../../../Api/ApiMitra.jsx';
+import {faCheckCircle, faCircleXmark, faTrash} from '@fortawesome/free-solid-svg-icons';
+import {acceptUser, deleteMitra, getMitraList, rejectMitra, searchMitra} from '../../../Api/ApiMitra.jsx';
 import {utils, writeFile} from "xlsx";
+import {
+    Alert,
+    AlertIcon,
+    AlertTitle,
+    AlertDescription,
+} from '@chakra-ui/react'
 
 const baseImageUrl = import.meta.env.VITE_APP_BASEIMG;
 
 function TableComponent() {
-
-
     const [user, setUsers] = useState([]);
 
     useEffect(() => {
@@ -20,7 +23,8 @@ function TableComponent() {
         try {
             const result = await getMitraList();
             if (result && result.data) {
-                setUsers(result.data);
+                const sortedUsers = result.data.sort((a, b) => b.id - a.id);
+                setUsers(sortedUsers);
             } else {
                 console.error("Invalid Mitra data structure:", result);
             }
@@ -32,63 +36,90 @@ function TableComponent() {
     const handleAcceptUser = async (id) => {
         try {
             const isConfirmed = window.confirm("Apakah Anda yakin ingin menerima pengguna ini?");
-
             if (isConfirmed) {
                 await acceptUser(id);
-                alert("Pengguna telah diterima!");
-                fetchUserList()
+                alert("Mitra Berhasil Diterima")
+                // <Alert status='success'>
+                //     <AlertIcon />
+                //     Mitra Berhasil Diterima!
+                // </Alert>
+                fetchUserList();
             } else {
                 console.log("Penerimaan pengguna dibatalkan.");
             }
         } catch (error) {
-            console.error("Error handling accepted user:", error);
-        }
-    }
+            // <Alert status='error'>
+            //     <AlertIcon />
+            //     <AlertTitle>Penerimaan Mitra Eror</AlertTitle>
+            //     <AlertDescription>{error}</AlertDescription>
+            // </Alert>
 
-    const handleDeleteMitra =  async (id) => {
+            alert("Eror Accept Mitra", error)
+        }
+    };
+
+    const handleRejectMitra = async (id) => {
+        try {
+            const isConfirmed = window.confirm("Apakah Anda yakin ingin menolak pengguna ini?");
+            if (isConfirmed) {
+                await rejectMitra(id);
+                await deleteMitra(id);
+                alert("Mitra Berhasil Ditolak")
+                // <Alert status='success'>
+                //     <AlertIcon />
+                //     Mitra Berhasil Ditolak!
+                // </Alert>
+                fetchUserList();
+            } else {
+                console.log("Penolakan pengguna dibatalkan.");
+            }
+        } catch (error) {
+            alert("Penolakan Mitra Eror", error)
+            // <Alert status='error'>
+            //     <AlertIcon />
+            //     <AlertTitle>Penolakan Mitra Eror</AlertTitle>
+            //     <AlertDescription>{error}</AlertDescription>
+            // </Alert>
+        }
+    };
+
+    const handleDeleteMitra = async (id) => {
         try {
             const isConfirmed = window.confirm("Apakah anda yakin ingin menghapus Mitra ini?");
-
-
-            if (isConfirmed){
+            if (isConfirmed) {
                 await deleteMitra(id);
-                alert("Mitra Telah Dihapus!")
-                fetchUserList()
+                alert("Mitra Telah Dihapus!");
+                fetchUserList();
             } else {
-                console.log("Penghapusan Mitra Dibatalkan!")
+                console.log("Penghapusan Mitra Dibatalkan!");
             }
-        }catch (e) {
-            console.error("Eror Handling Delete Mitra", e)
+        } catch (e) {
+            console.error("Error Handling Delete Mitra", e);
         }
-    }
+    };
 
     const handleOnExport = () => {
-        // console.log(pengguna)
-
         var wb = utils.book_new(),
-            ws = utils.json_to_sheet((user));
+            ws = utils.json_to_sheet(user);
 
         utils.book_append_sheet(wb, ws, "SheetUser");
-
         writeFile(wb, "Data Mitra.xlsx");
-    }
+    };
 
     const search = async (q) => {
         if (q.length > 3) {
-            const query = await searchMitra(q)
-            setUsers(query.data)
-            console.log({query: query})
+            const query = await searchMitra(q);
+            setUsers(query.data);
+            console.log({query: query});
         } else {
-            fetchUserList()
+            fetchUserList();
         }
-    }
+    };
 
     return (
         <>
             <div className={"mb-5"}>
-                <h1 className={"font-semibold font-sans text-3xl"}>
-                    Data Mitra
-                </h1>
+                <h1 className={"font-semibold font-sans text-3xl"}>Data Mitra</h1>
             </div>
             <div className={"mb-5 flex flex-row"}>
                 <input
@@ -98,8 +129,7 @@ function TableComponent() {
                     onChange={({target}) => search(target.value)}
                 />
                 <button onClick={handleOnExport}>
-                    <div
-                        className="px-5 py-5 flex flex-row items-center gap-2.5 border border-gray-300 rounded-[10px] shadow-custom-dark h-[50px] w-[150px]">
+                    <div className="px-5 py-5 flex flex-row items-center gap-2.5 border border-gray-300 rounded-[10px] shadow-custom-dark h-[50px] w-[150px]">
                         <p className={"font-semibold"}>Download</p>
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5}
                              stroke="currentColor" className="w-6 h-6">
@@ -110,15 +140,13 @@ function TableComponent() {
                 </button>
             </div>
             <div className="table-auto overflow-auto h-[535px]">
-                <table
-                    className="min-w-full bg-white border-collapse border border-gray-300 rounded-lg shadow-custom-light">
+                <table className="min-w-full bg-white border-collapse border border-gray-300 rounded-lg shadow-custom-light">
                     <thead>
                     <tr>
-                        <th className="table-header">ID</th>
-                        <th className="table-header">Nama Lengkap</th>
+                        <th className="table-header">No</th>
+                        <th className="table-header">Nama Toko</th>
                         <th className="table-header">NIS</th>
                         <th className="table-header">Dompet Digital</th>
-                        {/*<th className="table-header">Nama Toko</th>*/}
                         <th className="table-header">Jumlah Product</th>
                         <th className="table-header">Jumlah Jasa</th>
                         <th className="table-header">Email</th>
@@ -129,13 +157,12 @@ function TableComponent() {
                     </tr>
                     </thead>
                     <tbody>
-                    {user.map((item) => {
+                    {user.map((item, index) => {
                         const imageUrl = `${baseImageUrl}${item.image}`;
-                        console.log("Image URL:", imageUrl); // Debug log
                         return (
                             <tr key={item.id} className="hover:bg-gray-100">
-                                <td className="py-2 px-4 border border-gray-300 text-center">{item.id}</td>
-                                <td className="table-down">{item.nama}</td>
+                                <td className="py-2 px-4 border border-gray-300 text-center">{index + 1}</td>
+                                <td className="table-down">{item['nama toko']}</td>
                                 <td className="table-down">{item.nis}</td>
                                 <td className="table-down">{item.nomor}</td>
                                 <td className="table-down">{item.jumlahproduct}</td>
@@ -143,15 +170,21 @@ function TableComponent() {
                                 <td className="table-down">{item.email}</td>
                                 <td className="table-down">{item.status}</td>
                                 <td className="table-down">
-                                    <img src={imageUrl} alt={item.nama} className="w-20 h-20 object-cover"/>
+                                    <a href={imageUrl} target="_blank" rel="noopener noreferrer">
+                                        <img src={imageUrl} alt={item.nama} className="w-20 h-20 object-cover"/>
+                                    </a>
                                 </td>
                                 <td className="table-down text-[#FD0404]">
-                                    <button onClick={() => handleAcceptUser(item.id)}>
-                                        <FontAwesomeIcon icon={faCheckCircle}/>
-                                    </button>
-                                    <button className={"ml-4"}>
-                                        <FontAwesomeIcon icon={faCircleXmark}/>
-                                    </button>
+                                    {item.status === 'pending' ? (
+                                        <>
+                                            <button onClick={() => handleAcceptUser(item.id)}>
+                                                <FontAwesomeIcon icon={faCheckCircle}/>
+                                            </button>
+                                            <button className={"ml-4"} onClick={() => handleRejectMitra(item.id)}>
+                                                <FontAwesomeIcon icon={faCircleXmark}/>
+                                            </button>
+                                        </>
+                                    ) : null}
                                 </td>
                                 <td className={"table-down text-[#FD0404]"}>
                                     <button onClick={() => handleDeleteMitra(item.id)}>

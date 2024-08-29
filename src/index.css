@@ -26,3 +26,16 @@
         @apply py-2 px-4 border border-gray-300 w-screen text-center;
     }
 }
+
+.filter-button {
+    padding: 10px 20px;
+    margin: 0 5px;
+    border: none;
+    cursor: pointer;
+    background-color: #f0f0f0;
+}
+
+.filter-button.active {
+    background-color: #007bff;
+    color: white;
+}

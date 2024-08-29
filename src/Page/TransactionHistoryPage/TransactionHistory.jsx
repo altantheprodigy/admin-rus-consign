@@ -6,7 +6,7 @@ import React from "react";
 
 function TransactionHistory() {
     return (
-        <div className={"m-4 flex flex-row"}>
+        <div className={"m-4 flex flex-row h-[550px]"}>
             <div>
                 <SideBarComponent/>
             </div>

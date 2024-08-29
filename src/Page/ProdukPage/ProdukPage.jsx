@@ -7,7 +7,7 @@ function ProdukPage() {
     return (
         <div className={"m-4 flex flex-row h-[550px]"}>
             <SideBarComponent/>
-            <div className={"ml-10 flex flex-col h-screen"}>
+            <div className={"ml-10 flex flex-col h-[630px]"}>
                 <TableComponent/>
             </div>
         </div>

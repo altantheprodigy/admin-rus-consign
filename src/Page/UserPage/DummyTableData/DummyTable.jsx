@@ -104,7 +104,7 @@ function TableComponent() {
                     className="min-w-full bg-white border-collapse border border-gray-300 rounded-lg shadow-custom-light">
                     <thead>
                     <tr>
-                        <th className="table-header">ID</th>
+                        <th className="table-header">No</th>
                         <th className="table-header">Username</th>
                         <th className="table-header">Email</th>
                         {/*<th className="table-header">Mitra_ID</th>*/}
@@ -112,9 +112,9 @@ function TableComponent() {
                     </tr>
                     </thead>
                     <tbody>
-                    {pengguna.map((item) => (
+                    {pengguna.map((item, index) => (
                         <tr key={item.id} className="hover:bg-gray-100">
-                            <td className="py-2 px-4 border border-gray-300 text-center">{item.id}</td>
+                            <td className="py-2 px-4 border border-gray-300 text-center">{index + 1}</td>
                             <td className="table-down">{item.name}</td>
                             <td className="table-down">{item.email}</td>
                             {/*<td className="table-down">{item.mitra_id}</td>*/}

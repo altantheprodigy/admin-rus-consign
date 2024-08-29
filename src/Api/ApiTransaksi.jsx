@@ -3,10 +3,10 @@ import axios from "axios";
 const baseLink = import.meta.env.VITE_APP_BASEURL
 const token = localStorage.getItem('authToken');
 
-export const getTransaksiList = async () => {
+export const getTransaksiList = async (status) => {
     try {
         const response = await axios.get(
-            `${baseLink}/api/cods/status/selesai`,
+            `${baseLink}/api/cods/status/${status}`,
             {
                 headers: {
                     Authorization: `Bearer ${token}`
@@ -15,7 +15,7 @@ export const getTransaksiList = async () => {
         );
         return response.data;
     } catch (e) {
-        console.error("eror fetching Data Transaksi ", e)
+        console.error("Error fetching Data Transaksi ", e)
         throw e;
     }
 }

@@ -58,3 +58,15 @@ export const acceptProduk = async (id) => {
         throw e;
     }
 }
+
+export const rejectProduct = async (id) => {
+    try {
+        const response = await axios.put(
+            `${baseLink}/api/unpublish/${id}`
+        );
+        return response.data;
+    } catch (e) {
+        console.error("Eror Accepting Barang: ", e);
+        throw e;
+    }
+}

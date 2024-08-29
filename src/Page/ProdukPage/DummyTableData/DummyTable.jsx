@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCheckCircle, faCircleXmark, faTrash } from '@fortawesome/free-solid-svg-icons';
-import { acceptProduk, getMovieList, getProduk, searchMovie } from "../../../Api/Api.jsx";
+import {acceptProduk, getMovieList, getProduk, rejectProduct, searchMovie} from "../../../Api/Api.jsx";
 import { utils, writeFile } from "xlsx";
 
 function TableComponent() {
@@ -20,7 +20,8 @@ function TableComponent() {
         try {
             const result = await getProduk();
             if (result && result.barangs) {
-                setProduk(result.barangs);
+                const sortedProduk = result.barangs.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+                setProduk(sortedProduk);
             } else {
                 console.error("Invalid Produk data structure");
             }
@@ -50,6 +51,22 @@ function TableComponent() {
             }
         } catch (e) {
             console.error("Error handling publish barang: ", e);
+        }
+    };
+
+    const handleRejcetBarang = async (id) => {
+        try {
+            const isConfirmed = window.confirm("Apakah anda yakin ingin menolak barang?");
+
+            if (isConfirmed) {
+                await rejectProduct(id);
+                alert("Barang Telah Di Reject");
+                fetchProdukList();
+            } else {
+                console.log("Rejcet barang dibatalkan");
+            }
+        } catch (e) {
+            console.error("Error handling reject barang: ", e);
         }
     };
 
@@ -91,45 +108,48 @@ function TableComponent() {
                     </div>
                 </button>
             </div>
-            <div className="table-auto overflow-auto h-[670px]">
+            <div className="table-auto overflow-auto h-[535px]">
                 <table
                     className="min-w-full bg-white border-collapse border border-gray-300 rounded-lg shadow-custom-light">
                     <thead>
                     <tr>
-                        <th className="table-header">ID</th>
+                        <th className="table-header">No</th>
                         <th className="table-header">Nama Produk</th>
                         <th className="table-header">Deskripsi</th>
                         <th className="table-header">Harga</th>
                         <th className="table-header">Status</th>
                         <th className="table-header">Image</th>
-                        <th className="table-header">ID Mitra</th>
+                        <th className="table-header">Nama Toko</th>
                         <th className="table-header">Accept</th>
-                        <th className="table-header">Action</th>
                     </tr>
                     </thead>
                     <tbody>
-                    {produk.map((produk) => {
+                    {produk.map((produk, index) => {
                         const imageUrl = modifyImageUrl(produk.image_barang);
                         return (
                             <tr key={produk.id} className="hover:bg-gray-100">
-                                <td className="py-2 px-4 border border-gray-300 text-center">{produk.id}</td>
+                                <td className="py-2 px-4 border border-gray-300 text-center">{index + 1}</td>
                                 <td className="table-down">{produk.nama_barang}</td>
                                 <td className="table-down">{produk.deskripsi}</td>
                                 <td className="table-down">{produk.harga}</td>
                                 <td className="table-down">{produk.status}</td>
-                                <td className="table-down">
-                                    <img src={imageUrl} alt={produk.nama_barang} className="w-20 h-20 object-cover" />
-                                </td>
-                                <td className="table-down">{produk.mitra.id}</td>
+                                <a href={imageUrl} target="_blank" rel="noopener noreferrer">
+                                    <img src={imageUrl} alt={produk.nama} className="w-20 h-20 object-cover"/>
+                                </a>
+                                <td className="table-down">{produk.mitra.nama_toko}</td>
                                 <td className="table-down text-[#FD0404]">
-                                    <button onClick={() => handleAcceptBarang(produk.id)}>
-                                        <FontAwesomeIcon icon={faCheckCircle} />
-                                    </button>
-                                    <button className={"ml-4"}>
-                                        <FontAwesomeIcon icon={faCircleXmark} />
-                                    </button>
+                                    {produk.status == 'pending' ? (
+                                        <>
+                                            <button onClick={() => handleAcceptBarang(produk.id)}>
+                                                <FontAwesomeIcon icon={faCheckCircle}/>
+                                            </button>
+                                            <button className={"ml-4"} onClick={() => handleRejcetBarang(produk.id)}>
+                                                <FontAwesomeIcon icon={faCircleXmark}/>
+                                            </button>
+                                        </>
+                                    ) : null}
+
                                 </td>
-                                <td className="table-down text-[#FD0404]"><FontAwesomeIcon icon={faTrash} /></td>
                             </tr>
                         );
                     })}

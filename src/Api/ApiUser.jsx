@@ -37,7 +37,12 @@ export const deleteUser = async (id) => {
 export const searchUser = async (q) => {
     try {
         const response = await axios.get(
-            `${baseLink}/public/api/users?username=${q}`
+            `${baseLink}/api/users?email=${q}`,
+            {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            }
         );
         return response.data; // Returning the data property
     } catch (error) {

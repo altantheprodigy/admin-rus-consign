@@ -32,10 +32,33 @@ export const acceptUser = async (id) => {
     }
 }
 
+export const rejectMitra = async (id) => {
+    try {
+        const response = await axios.delete(
+            `${baseLink}/api/reject/${id}`,
+            {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            }
+        );
+
+        return response.data;
+    } catch (error) {
+        console.error("Error Reject Mitra:", error);
+        throw error;
+    }
+}
+
 export const deleteMitra = async (id) => {
     try {
         const response = await axios.delete(
-            `${baseLink}/api/mitras/${id}`
+            `${baseLink}/api/mitras/${id}`,
+            {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            }
         );
         return response.data
     } catch (e) {
@@ -47,7 +70,12 @@ export const deleteMitra = async (id) => {
 export const searchMitra = async (q) => {
     try {
         const response = await axios.get(
-            `${baseLink}/public/api/mitra?username=${q}`
+            `${baseLink}/api/mitra?nama_toko=${q}`,
+            {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            }
         );
         return response.data
     } catch (e) {
