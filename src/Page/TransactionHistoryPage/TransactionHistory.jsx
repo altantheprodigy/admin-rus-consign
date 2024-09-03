@@ -1,5 +1,4 @@
 import SideBarComponent from "../../Component/SideBar/SideBarComponent.jsx";
-import DropdownComponent from "./FilterProduk/DropdownComponent.jsx";
 import TableComponent from "./DummyTableData/DummyTable.jsx";
 // eslint-disable-next-line no-unused-vars
 import React from "react";
