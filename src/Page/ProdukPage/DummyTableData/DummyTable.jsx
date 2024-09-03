@@ -180,7 +180,7 @@ function TableComponent() {
 
     return (
         <>
-            <div className={"mb-5"}>
+            <div className={""}>
                 <h1 className={"font-semibold font-sans text-3xl"}>
                     Data Produk
                 </h1>
@@ -196,7 +196,7 @@ function TableComponent() {
                     </div>
                 </button>
             </div>
-            <div className="table-auto overflow-auto h-[535px]">
+            <div className="table-auto overflow-auto h-[480px]">
                 <table
                     className="min-w-full bg-white border-collapse border border-gray-300 rounded-lg shadow-custom-light">
                     <thead>

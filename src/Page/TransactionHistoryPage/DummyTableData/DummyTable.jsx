@@ -120,40 +120,41 @@ function TableComponent() {
     };
 
     return (
-        <div>
-            <div className="flex mb-4">
-                <button onClick={handleOnExport}>
-                    <div
-                        className="px-5 py-5 flex flex-row items-center gap-2.5 border border-gray-300 rounded-[10px] shadow-custom-dark h-[50px] w-[150px] mr-3.5">
-                        <p className={"font-semibold"}>Download</p>
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5}
-                             stroke="currentColor" className="w-6 h-6">
-                            <path strokeLinecap="round" strokeLinejoin="round"
-                                  d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5M16.5 12 12 16.5m0 0L7.5 12m4.5 4.5V3"/>
-                        </svg>
-                    </div>
-                </button>
-                <select
-                    className="filter-dropdown p-2 border rounded"
-                    value={filter}
-                    onChange={handleFilterChange}
-                >
-                    <option value="belum_pembayaran">Belum Pembayaran</option>
-                    <option value="progres">Progres</option>
-                    <option value="selesai">Selesai</option>
-                    <option value="batal_pesanan">Dibatalkan</option>
-                </select>
+        <div className={" w-[195vh] h-[100px]"}>
+            <div className="flex flex-col">
+                <h1 className="font-semibold font-sans text-3xl">History Transaksi</h1>
             </div>
+            <button onClick={handleOnExport}>
+                <div
+                    className="px-5 py-5 flex flex-row items-center gap-2.5 border border-gray-300 rounded-[10px] shadow-custom-dark h-[50px] w-[150px] mr-3.5">
+                    <p className={"font-semibold"}>Download</p>
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5}
+                         stroke="currentColor" className="w-6 h-6">
+                        <path strokeLinecap="round" strokeLinejoin="round"
+                              d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5M16.5 12 12 16.5m0 0L7.5 12m4.5 4.5V3"/>
+                    </svg>
+                </div>
+            </button>
+            <select
+                className="filter-dropdown p-2 border rounded"
+                value={filter}
+                onChange={handleFilterChange}
+            >
+                <option value="belum_pembayaran">Belum Pembayaran</option>
+                <option value="progres">Progres</option>
+                <option value="selesai">Selesai</option>
+                <option value="batal_pesanan">Dibatalkan</option>
+            </select>
             {loading ? (
                 <div className="absolute inset-0 flex justify-center items-center">
                     <CircularProgress isIndeterminate color="red.600"/>
                 </div>
             ) : noData ? (
-                <div className="flex justify-center items-center">
+                <div className="flex justify-center items-center w-full h-96">
                     <p className="text-lg text-gray-500">Data API kosong</p>
                 </div>
             ) : (
-                <div className="table-auto overflow-auto h-[535px]">
+                <div className="table-auto overflow-auto h-[505px]">
                     <table
                         className="min-w-full bg-white border-collapse border border-gray-300 rounded-lg shadow-custom-light">
                         <thead>

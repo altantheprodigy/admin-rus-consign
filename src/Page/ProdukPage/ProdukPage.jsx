@@ -5,9 +5,9 @@ import React from "react";
 
 function ProdukPage() {
     return (
-        <div className={"m-4 flex flex-row h-[550px]"}>
+        <div className={"m-4 flex flex-row h-[400px]"}>
             <SideBarComponent/>
-            <div className={"ml-10 flex flex-col h-[630px]"}>
+            <div className={"ml-10 flex flex-col h-[580px]"}>
                 <TableComponent/>
             </div>
         </div>

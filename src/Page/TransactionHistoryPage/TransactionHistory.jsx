@@ -6,12 +6,11 @@ import React from "react";
 
 function TransactionHistory() {
     return (
-        <div className={"m-4 flex flex-row h-[550px]"}>
+        <div className={"m-4 flex flex-row h-[400px]"}>
             <div>
                 <SideBarComponent/>
             </div>
-            <div className={"ml-10 flex flex-col gap-5"}>
-                <DropdownComponent/>
+            <div className={"ml-10 flex flex-col gap-5 h-[580px]"}>
                 <TableComponent/>
             </div>
         </div>

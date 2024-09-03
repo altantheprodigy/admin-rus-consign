@@ -5,7 +5,7 @@ import TableComponent from "./DummyTableData/DummyTable.jsx";
 
 function MitraPage() {
     return (
-        <div className={"m-4 flex flex-row h-[600px]"}>
+        <div className={"m-4 flex flex-row h-[570px]"}>
             <div>
                 <SideBarComponent/>
             </div>
