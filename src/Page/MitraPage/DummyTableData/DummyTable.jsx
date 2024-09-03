@@ -40,15 +40,11 @@ function TableComponent() {
             if (isConfirmed) {
                 await acceptUser(id);
                 alert("Mitra Berhasil Diterima")
-                // <Alert status='success'>
-                //     <AlertIcon />
-                //     Mitra Berhasil Diterima!
-                // </Alert>
                 const templateParams = {
                     email: mitraEmail,
                     to_name: namaToko,
-                    subject: "Pendaftaran Mitra Telah Diterima!",
-                    message: "Selamat! Anda telah diterima sebagai Mitra."
+                    subject: "Konfirmasi Penerimaan Mitra",
+                    message: "Dengan hormat, Kami dengan senang hati menginformasikan bahwa pengajuan Anda untuk menjadi Mitra kami telah berhasil diterima. Selamat bergabung! Kami menantikan kerja sama yang produktif dan sukses bersama Anda. Refresh 2x pada halaman profile untuk melihat perubahan"
                 };
                 emailjs.send('service_g69hsgc', 'template_6frjyib', templateParams, 'UjnvkaPDD5T1Df32X')
                     .then((response) => {
@@ -63,12 +59,6 @@ function TableComponent() {
                 console.log("Penerimaan pengguna dibatalkan.");
             }
         } catch (error) {
-            // <Alert status='error'>
-            //     <AlertIcon />
-            //     <AlertTitle>Penerimaan Mitra Eror</AlertTitle>
-            //     <AlertDescription>{error}</AlertDescription>
-            // </Alert>
-
             alert("Eror Accept Mitra", error)
             fetchUserList();
         }
@@ -81,15 +71,11 @@ function TableComponent() {
                 await rejectMitra(id);
                 await deleteMitra(id);
                 alert("Mitra Berhasil Ditolak")
-                // <Alert status='success'>
-                //     <AlertIcon />
-                //     Mitra Berhasil Ditolak!
-                // </Alert>
                 const templateParams = {
                     email: mitraEmail,
                     to_name: namaToko,
-                    subject: "Pendaftaran Mitra Telah Ditolak!",
-                    message: "Maaf, Anda ditolak mendaftar menjadi mitra, coba lagi dengan ketentuan yang sesuai!"
+                    subject: "Konfirmasi Penolakan Pendaftaran Mitra",
+                    message: "Dengan hormat, Kami ingin memberitahukan bahwa pendaftaran Anda sebagai Mitra belum dapat kami terima saat ini. Mohon maaf atas ketidaknyamanannya. Anda dapat mencoba kembali dengan memenuhi ketentuan yang telah ditetapkan. Terima kasih atas pengertian Anda. Refresh 2x pada halaman profile untuk melihat perubahan"
                 };
                 emailjs.send('service_g69hsgc', 'template_6frjyib', templateParams, 'UjnvkaPDD5T1Df32X')
                     .then((response) => {
@@ -105,20 +91,29 @@ function TableComponent() {
             }
         } catch (error) {
             alert("Penolakan Mitra Eror", error)
-            // <Alert status='error'>
-            //     <AlertIcon />
-            //     <AlertTitle>Penolakan Mitra Eror</AlertTitle>
-            //     <AlertDescription>{error}</AlertDescription>
-            // </Alert>
         }
     };
 
-    const handleDeleteMitra = async (id) => {
+    const handleDeleteMitra = async (id, mitraEmail,namaToko) => {
         try {
             const isConfirmed = window.confirm("Apakah anda yakin ingin menghapus Mitra ini?");
             if (isConfirmed) {
                 await deleteMitra(id);
                 alert("Mitra Telah Dihapus!");
+                const templateParams = {
+                    email: mitraEmail,
+                    to_name: namaToko,
+                    subject: "Pemberitahuan Penghapusan Mitra",
+                    message: "Dengan hormat, Kami ingin menginformasikan bahwa akun mitra Anda telah dihapus dari sistem kami. Jika Anda memiliki pertanyaan atau membutuhkan bantuan lebih lanjut, silakan hubungi kami. Terima kasih atas kerja sama Anda."
+                };
+                emailjs.send('service_g69hsgc', 'template_6frjyib', templateParams, 'UjnvkaPDD5T1Df32X')
+                    .then((response) => {
+                        alert('SUCCESS!', response.status, response.text);
+                        console.log('SUCCESS!', response.status, response.text);
+                    }, (error) => {
+                        alert('FAILED...', error);
+                        console.log('FAILED...', error);
+                    });
                 fetchUserList();
             } else {
                 console.log("Penghapusan Mitra Dibatalkan!");
@@ -288,7 +283,7 @@ function TableComponent() {
                                     ) : null}
                                 </td>
                                 <td className={"table-down text-[#FD0404]"}>
-                                    <button onClick={() => handleDeleteMitra(item.id)}>
+                                    <button onClick={() => handleDeleteMitra(item.id, item.email,item['nama toko'])}>
                                         <FontAwesomeIcon icon={faTrash}/>
                                     </button>
                                 </td>

@@ -120,8 +120,8 @@ function TableComponent() {
     };
 
     return (
-        <div className={" w-[195vh] h-[100px]"}>
-            <div className="flex flex-col">
+        <div className={" w-[194vh] h-[100px]"}>
+            <div className="flex flex-col mb-4">
                 <h1 className="font-semibold font-sans text-3xl">History Transaksi</h1>
             </div>
             <button onClick={handleOnExport}>
@@ -147,14 +147,14 @@ function TableComponent() {
             </select>
             {loading ? (
                 <div className="absolute inset-0 flex justify-center items-center">
-                    <CircularProgress isIndeterminate color="red.600"/>
+                    <CircularProgress isIndeterminate/>
                 </div>
             ) : noData ? (
                 <div className="flex justify-center items-center w-full h-96">
-                    <p className="text-lg text-gray-500">Data API kosong</p>
+                    <p className="text-lg text-[#FF3D3D]">Belum ada Data</p>
                 </div>
             ) : (
-                <div className="table-auto overflow-auto h-[505px]">
+                <div className="table-auto overflow-auto h-[505px] mt-2">
                     <table
                         className="min-w-full bg-white border-collapse border border-gray-300 rounded-lg shadow-custom-light">
                         <thead>
@@ -164,7 +164,7 @@ function TableComponent() {
                             <th className="table-header">Mitra</th>
                             <th className="table-header">Harga</th>
                             <th className="table-header">Pemesan</th>
-                            <th className="table-header">Metode Pembayaran</th>
+                            <th className="table-header">Status Pembayaran</th>
                         </tr>
                         </thead>
                         <tbody>

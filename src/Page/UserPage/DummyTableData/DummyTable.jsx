@@ -4,6 +4,7 @@ import {deleteUser, getUserList, searchUser} from "../../../Api/ApiUser.jsx";
 import {faTrash} from "@fortawesome/free-solid-svg-icons";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import { utils, writeFile } from "xlsx";
+import * as emailjs from "emailjs-com";
 
 function TableComponent() {
 
@@ -31,13 +32,27 @@ function TableComponent() {
         }
     };
 
-    const handleDeleteUser = async (id) => {
+    const handleDeleteUser = async (id, mitraEmail, username) => {
         try {
             const isConfirmed = window.confirm("Apakah anda yakin ingin menghapus user ini?");
 
             if (isConfirmed) {
                 await deleteUser(id);
                 alert("pengguna telah dihapus!");
+                const templateParams = {
+                    email: mitraEmail,
+                    to_name: username,
+                    subject: "Pemberitahuan Penghapusan user",
+                    message: "Dengan hormat, Kami ingin menginformasikan bahwa akun user Anda telah dihapus dari sistem kami. Jika Anda memiliki pertanyaan atau membutuhkan bantuan lebih lanjut, silakan hubungi kami. Terima kasih atas kerja sama Anda."
+                };
+                emailjs.send('service_g69hsgc', 'template_6frjyib', templateParams, 'UjnvkaPDD5T1Df32X')
+                    .then((response) => {
+                        alert('SUCCESS!', response.status, response.text);
+                        console.log('SUCCESS!', response.status, response.text);
+                    }, (error) => {
+                        alert('FAILED...', error);
+                        console.log('FAILED...', error);
+                    });
                 fetchPengguna()
             } else {
                 console.log("Pennghapusan Pengguna Dibatalkan");
@@ -184,7 +199,7 @@ function TableComponent() {
                             <td className="table-down">{item.email}</td>
                             {/*<td className="table-down">{item.mitra_id}</td>*/}
                             <td className="table-down text-[#FD0404]">
-                                <button onClick={() => handleDeleteUser(item.id)}>
+                                <button onClick={() => handleDeleteUser(item.id, item.email, item.name)}>
                                     <FontAwesomeIcon icon={faTrash}/>
                                 </button>
                             </td>

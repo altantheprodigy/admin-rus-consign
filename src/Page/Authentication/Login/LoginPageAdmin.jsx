@@ -91,12 +91,12 @@ function LoginPageAdmin() {
                     </div>
                 </form>
 
-                <p className="mt-10 text-center text-sm text-gray-500">
-                    Belum ada akun?{' '}
-                    <a href="/register" className="font-semibold leading-6 text-[#FF3D3D] hover:text-[#FF3D3D]">
-                        Register Sekarang!
-                    </a>
-                </p>
+                {/*<p className="mt-10 text-center text-sm text-gray-500">*/}
+                {/*    Belum ada akun?{' '}*/}
+                {/*    <a href="/register" className="font-semibold leading-6 text-[#FF3D3D] hover:text-[#FF3D3D]">*/}
+                {/*        Register Sekarang!*/}
+                {/*    </a>*/}
+                {/*</p>*/}
             </div>
         </div>
     );

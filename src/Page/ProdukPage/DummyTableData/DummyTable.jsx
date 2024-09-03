@@ -49,8 +49,8 @@ function TableComponent() {
                 const templateParams = {
                     email: mitraEmail,
                     to_name: namaToko,
-                    subject: "Barang Telah Di Publish!",
-                    message: "Selamat! Barang Anda telah dipublish, Selamat Berjualan!."
+                    subject: "Produk Anda Telah Dipublikasikan",
+                    message: "Dengan hormat, Kami dengan senang hati menginformasikan bahwa produk Anda telah berhasil dipublikasikan. Selamat berjualan, dan semoga sukses!"
                 };
                 emailjs.send('service_g69hsgc', 'template_6frjyib', templateParams, 'UjnvkaPDD5T1Df32X')
                     .then((response) => {
@@ -79,8 +79,8 @@ function TableComponent() {
                 const templateParams = {
                     email: mitraEmail,
                     to_name: namaToko,
-                    subject: "Produk mu ditolak oleh admin!",
-                    message: "Maaf, Produkmu ditolak admin, coba buat baru lagi!"
+                    subject: "Penolakan Produk oleh Admin",
+                    message: "Dengan hormat, Kami ingin memberitahukan bahwa produk yang Anda ajukan belum dapat disetujui oleh admin. Mohon maaf atas ketidaknyamanannya. Silakan coba untuk membuat produk baru yang sesuai dengan ketentuan. Terima kasih atas pengertiannya."
                 };
                 emailjs.send('service_g69hsgc', 'template_6frjyib', templateParams, 'UjnvkaPDD5T1Df32X')
                     .then((response) => {
