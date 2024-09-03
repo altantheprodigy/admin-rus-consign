@@ -181,12 +181,12 @@ function TableComponent() {
     return (
         <>
             <div className={""}>
-                <h1 className={"font-semibold font-sans text-3xl"}>
+                <h1 className={"font-semibold font-sans text-3xl mb-2"}>
                     Data Produk
                 </h1>
                 <button onClick={handleOnExport}>
                     <div
-                        className="px-5 py-5 flex flex-row items-center gap-2.5 border border-gray-300 rounded-[10px] shadow-custom-dark h-[50px] w-[150px]">
+                        className="px-5 py-5 flex flex-row mb-2 items-center gap-2.5 border border-gray-300 rounded-[10px] shadow-custom-dark h-[50px] w-[150px]">
                         <p className={"font-semibold"}>Download</p>
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5}
                              stroke="currentColor" className="w-6 h-6">
