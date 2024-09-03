@@ -4,6 +4,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCheckCircle, faCircleXmark, faTrash } from '@fortawesome/free-solid-svg-icons';
 import {acceptProduk, getMovieList, getProduk, rejectProduct, searchMovie} from "../../../Api/Api.jsx";
 import { utils, writeFile } from "xlsx";
+import * as emailjs from "emailjs-com";
 
 function TableComponent() {
 
@@ -38,13 +39,27 @@ function TableComponent() {
         }
     };
 
-    const handleAcceptBarang = async (id) => {
+    const handleAcceptBarang = async (id, mitraEmail, namaToko) => {
         try {
             const isConfirmed = window.confirm("Apakah anda yakin ingin publish barang?");
 
             if (isConfirmed) {
                 await acceptProduk(id);
                 alert("Barang Telah Di publish");
+                const templateParams = {
+                    email: mitraEmail,
+                    to_name: namaToko,
+                    subject: "Barang Telah Di Publish!",
+                    message: "Selamat! Barang Anda telah dipublish, Selamat Berjualan!."
+                };
+                emailjs.send('service_g69hsgc', 'template_6frjyib', templateParams, 'UjnvkaPDD5T1Df32X')
+                    .then((response) => {
+                        alert('SUCCESS!', response.status, response.text);
+                        console.log('SUCCESS!', response.status, response.text);
+                    }, (error) => {
+                        alert('FAILED...', error);
+                        console.log('FAILED...', error);
+                    });
                 fetchProdukList();
             } else {
                 console.log("publish barang dibatalkan");
@@ -54,13 +69,27 @@ function TableComponent() {
         }
     };
 
-    const handleRejcetBarang = async (id) => {
+    const handleRejcetBarang = async (id, mitraEmail, namaToko) => {
         try {
             const isConfirmed = window.confirm("Apakah anda yakin ingin menolak barang?");
 
             if (isConfirmed) {
                 await rejectProduct(id);
                 alert("Barang Telah Di Reject");
+                const templateParams = {
+                    email: mitraEmail,
+                    to_name: namaToko,
+                    subject: "Produk mu ditolak oleh admin!",
+                    message: "Maaf, Produkmu ditolak admin, coba buat baru lagi!"
+                };
+                emailjs.send('service_g69hsgc', 'template_6frjyib', templateParams, 'UjnvkaPDD5T1Df32X')
+                    .then((response) => {
+                        alert('SUCCESS!', response.status, response.text);
+                        console.log('SUCCESS!', response.status, response.text);
+                    }, (error) => {
+                        alert('FAILED...', error);
+                        console.log('FAILED...', error);
+                    });
                 fetchProdukList();
             } else {
                 console.log("Rejcet barang dibatalkan");
@@ -71,8 +100,73 @@ function TableComponent() {
     };
 
     const handleOnExport = () => {
-        var wb = utils.book_new(),
-            ws = utils.json_to_sheet(produk);
+        const wb = utils.book_new();
+        const ws = utils.json_to_sheet(produk);
+
+        // Set the width of each column
+        const wscols = [
+            {wpx: 50},  // Adjust these as needed
+            {wpx: 200},
+            {wpx: 100},
+            {wpx: 150},
+            // Add more columns as needed
+        ];
+
+        ws['!cols'] = wscols;
+
+        // Apply header styles with color
+        const headerRange = utils.decode_range(ws['!ref']);
+        for (let C = headerRange.s.c; C <= headerRange.e.c; C++) {
+            const cellAddress = utils.encode_cell({r: 0, c: C});
+            if (ws[cellAddress]) {
+                ws[cellAddress].s = {
+                    fill: {
+                        fgColor: { rgb: "FFFF00" }  // Yellow background color
+                    },
+                    font: {
+                        bold: true,
+                        color: { rgb: "FF0000" }  // Red font color
+                    },
+                    alignment: {
+                        vertical: "center",
+                        horizontal: "center",
+                    },
+                    border: {
+                        top: {style: "thin"},
+                        bottom: {style: "thin"},
+                        left: {style: "thin"},
+                        right: {style: "thin"},
+                    },
+                };
+            }
+        }
+
+        // Apply alignment, borders, and padding styles for the data rows
+        for (let R = 1; R < produk.length + 1; R++) {
+            for (let C = 0; C < wscols.length; C++) {
+                const cellAddress = utils.encode_cell({r: R, c: C});
+                if (!ws[cellAddress]) continue;
+
+                ws[cellAddress].s = {
+                    alignment: {
+                        vertical: "center",
+                        horizontal: "center",
+                    },
+                    border: {
+                        top: {style: "thin"},
+                        bottom: {style: "thin"},
+                        left: {style: "thin"},
+                        right: {style: "thin"},
+                    },
+                    padding: {
+                        top: 2,
+                        bottom: 2,
+                        left: 5,
+                        right: 5,
+                    },
+                };
+            }
+        }
 
         utils.book_append_sheet(wb, ws, "SheetUser");
 
@@ -90,12 +184,6 @@ function TableComponent() {
                 <h1 className={"font-semibold font-sans text-3xl"}>
                     Data Produk
                 </h1>
-                <input
-                    type="text"
-                    className="mr-5 w-[300px] p-3 border border-gray-300 rounded-[10px] shadow-custom-light focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    placeholder="Cari Item Berdasarkan nama atau kode barang"
-                    onChange={({ target }) => search(target.value)}
-                />
                 <button onClick={handleOnExport}>
                     <div
                         className="px-5 py-5 flex flex-row items-center gap-2.5 border border-gray-300 rounded-[10px] shadow-custom-dark h-[50px] w-[150px]">
@@ -119,6 +207,7 @@ function TableComponent() {
                         <th className="table-header">Harga</th>
                         <th className="table-header">Status</th>
                         <th className="table-header">Image</th>
+                        <th className="table-header">Email</th>
                         <th className="table-header">Nama Toko</th>
                         <th className="table-header">Accept</th>
                     </tr>
@@ -133,19 +222,20 @@ function TableComponent() {
                                 <td className="table-down">{produk.deskripsi}</td>
                                 <td className="table-down">{produk.harga}</td>
                                 <td className="table-down">{produk.status}</td>
-                                <td className="table-down"  >
+                                <td className="table-down">
                                     <a href={imageUrl} target="_blank" rel="noopener noreferrer">
                                         <img src={imageUrl} alt={produk.nama} className="w-20 h-20 object-cover"/>
                                     </a>
                                 </td>
+                                <td className="table-down">{produk.mitra.email}</td>
                                 <td className="table-down">{produk.mitra.nama_toko}</td>
                                 <td className="table-down text-[#FD0404]">
                                     {produk.status == 'pending' ? (
                                         <>
-                                            <button onClick={() => handleAcceptBarang(produk.id)}>
+                                            <button onClick={() => handleAcceptBarang(produk.id, produk.mitra.email, produk.mitra.nama_toko)}>
                                                 <FontAwesomeIcon icon={faCheckCircle}/>
                                             </button>
-                                            <button className={"ml-4"} onClick={() => handleRejcetBarang(produk.id)}>
+                                            <button className={"ml-4"} onClick={() => handleRejcetBarang(produk.id, produk.mitra.email, produk.mitra.nama_toko)}>
                                                 <FontAwesomeIcon icon={faCircleXmark}/>
                                             </button>
                                         </>

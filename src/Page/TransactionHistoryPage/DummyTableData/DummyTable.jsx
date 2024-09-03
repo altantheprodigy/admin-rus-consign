@@ -17,18 +17,85 @@ function TableComponent() {
         fetchTransaksi();
     }, [filter]); // Re-fetch when filter changes
 
+
+
     const handleOnExport = () => {
-        var wb = utils.book_new(),
-            ws = utils.json_to_sheet((transaksi));
+        const wb = utils.book_new();
+        const ws = utils.json_to_sheet(transaksi);
+
+        // Set the width of each column (adjust as needed)
+        const wscols = [
+            {wpx: 50},  // Column 1 width
+            {wpx: 200}, // Column 2 width
+            {wpx: 100}, // Column 3 width
+            // Add more columns as needed
+        ];
+
+        ws['!cols'] = wscols;
+
+        // Apply header styles with color
+        const headerRange = utils.decode_range(ws['!ref']);
+        for (let C = headerRange.s.c; C <= headerRange.e.c; C++) {
+            const cellAddress = utils.encode_cell({r: 0, c: C});
+            if (ws[cellAddress]) {
+                ws[cellAddress].s = {
+                    fill: {
+                        fgColor: { rgb: "FFFF00" }  // Yellow background color
+                    },
+                    font: {
+                        bold: true,
+                        color: { rgb: "FF0000" }  // Red font color
+                    },
+                    alignment: {
+                        vertical: "center",
+                        horizontal: "center",
+                    },
+                    border: {
+                        top: {style: "thin"},
+                        bottom: {style: "thin"},
+                        left: {style: "thin"},
+                        right: {style: "thin"},
+                    },
+                };
+            }
+        }
+
+        // Apply alignment, borders, and padding styles for the data rows
+        for (let R = 1; R < transaksi.length + 1; R++) {
+            for (let C = 0; C < wscols.length; C++) {
+                const cellAddress = utils.encode_cell({r: R, c: C});
+                if (!ws[cellAddress]) continue;
+
+                ws[cellAddress].s = {
+                    alignment: {
+                        vertical: "center",
+                        horizontal: "center",
+                    },
+                    border: {
+                        top: {style: "thin"},
+                        bottom: {style: "thin"},
+                        left: {style: "thin"},
+                        right: {style: "thin"},
+                    },
+                    padding: {
+                        top: 2,
+                        bottom: 2,
+                        left: 5,
+                        right: 5,
+                    },
+                };
+            }
+        }
 
         utils.book_append_sheet(wb, ws, "SheetUser");
 
         writeFile(wb, "Data Transaksi.xlsx");
-    }
+    };
+
 
     const fetchTransaksi = async () => {
-        setLoading(true); // Start loading
-        setNoData(false); // Reset noData state
+        setLoading(true);
+        setNoData(false);
         try {
             const result = await getTransaksiList(filter);
             if (result && Array.isArray(result.cods)) {
@@ -71,9 +138,10 @@ function TableComponent() {
                     value={filter}
                     onChange={handleFilterChange}
                 >
-                    <option value="selesai">Selesai</option>
                     <option value="belum_pembayaran">Belum Pembayaran</option>
                     <option value="progres">Progres</option>
+                    <option value="selesai">Selesai</option>
+                    <option value="batal_pesanan">Dibatalkan</option>
                 </select>
             </div>
             {loading ? (

@@ -9,6 +9,7 @@ import {
     AlertTitle,
     AlertDescription,
 } from '@chakra-ui/react'
+import * as emailjs from "emailjs-com";
 
 const baseImageUrl = import.meta.env.VITE_APP_BASEIMG;
 
@@ -33,7 +34,7 @@ function TableComponent() {
         }
     };
 
-    const handleAcceptUser = async (id) => {
+    const handleAcceptUser = async (id, mitraEmail, namaToko) => {
         try {
             const isConfirmed = window.confirm("Apakah Anda yakin ingin menerima pengguna ini?");
             if (isConfirmed) {
@@ -43,6 +44,20 @@ function TableComponent() {
                 //     <AlertIcon />
                 //     Mitra Berhasil Diterima!
                 // </Alert>
+                const templateParams = {
+                    email: mitraEmail,
+                    to_name: namaToko,
+                    subject: "Pendaftaran Mitra Telah Diterima!",
+                    message: "Selamat! Anda telah diterima sebagai Mitra."
+                };
+                emailjs.send('service_g69hsgc', 'template_6frjyib', templateParams, 'UjnvkaPDD5T1Df32X')
+                    .then((response) => {
+                        alert('SUCCESS!', response.status, response.text);
+                        console.log('SUCCESS!', response.status, response.text);
+                    }, (error) => {
+                        alert('FAILED...', error);
+                        console.log('FAILED...', error);
+                    });
                 fetchUserList();
             } else {
                 console.log("Penerimaan pengguna dibatalkan.");
@@ -55,10 +70,11 @@ function TableComponent() {
             // </Alert>
 
             alert("Eror Accept Mitra", error)
+            fetchUserList();
         }
     };
 
-    const handleRejectMitra = async (id) => {
+    const handleRejectMitra = async (id, mitraEmail,namaToko) => {
         try {
             const isConfirmed = window.confirm("Apakah Anda yakin ingin menolak pengguna ini?");
             if (isConfirmed) {
@@ -69,6 +85,20 @@ function TableComponent() {
                 //     <AlertIcon />
                 //     Mitra Berhasil Ditolak!
                 // </Alert>
+                const templateParams = {
+                    email: mitraEmail,
+                    to_name: namaToko,
+                    subject: "Pendaftaran Mitra Telah Ditolak!",
+                    message: "Maaf, Anda ditolak mendaftar menjadi mitra, coba lagi dengan ketentuan yang sesuai!"
+                };
+                emailjs.send('service_g69hsgc', 'template_6frjyib', templateParams, 'UjnvkaPDD5T1Df32X')
+                    .then((response) => {
+                        alert('SUCCESS!', response.status, response.text);
+                        console.log('SUCCESS!', response.status, response.text);
+                    }, (error) => {
+                        alert('FAILED...', error);
+                        console.log('FAILED...', error);
+                    });
                 fetchUserList();
             } else {
                 console.log("Penolakan pengguna dibatalkan.");
@@ -99,9 +129,80 @@ function TableComponent() {
     };
 
     const handleOnExport = () => {
-        var wb = utils.book_new(),
-            ws = utils.json_to_sheet(user);
+        const ws = utils.json_to_sheet(user);
 
+        // Set the width of each column
+        const wscols = [
+            {wpx: 50},  // No
+            {wpx: 200}, // Nama Toko
+            {wpx: 100}, // NIS
+            {wpx: 150}, // Dompet Digital
+            {wpx: 150}, // Jumlah Product
+            {wpx: 150}, // Jumlah Jasa
+            {wpx: 250}, // Email
+            {wpx: 100}, // Status
+            {wpx: 200}, // Foto ID Card
+            {wpx: 100}, // Action
+            {wpx: 100}  // Delete
+        ];
+
+        ws['!cols'] = wscols;
+
+        // Apply header styles with color
+        const headerRange = utils.decode_range(ws['!ref']);
+        for (let C = headerRange.s.c; C <= headerRange.e.c; C++) {
+            const cellAddress = utils.encode_cell({r: 0, c: C});
+            if (ws[cellAddress]) {
+                ws[cellAddress].s = {
+                    fill: {
+                        fgColor: { rgb: "FFFF00" }  // Yellow background color
+                    },
+                    font: {
+                        bold: true,
+                        color: { rgb: "FF0000" }  // Red font color
+                    },
+                    alignment: {
+                        vertical: "center",
+                        horizontal: "center",
+                    },
+                    border: {
+                        top: {style: "thin"},
+                        bottom: {style: "thin"},
+                        left: {style: "thin"},
+                        right: {style: "thin"},
+                    },
+                };
+            }
+        }
+
+        // Apply some alignment and margin styles for the data rows
+        for (let R = 1; R < user.length + 1; R++) {
+            for (let C = 0; C < wscols.length; C++) {
+                const cellAddress = utils.encode_cell({r: R, c: C});
+                if (!ws[cellAddress]) continue;
+
+                ws[cellAddress].s = {
+                    alignment: {
+                        vertical: "center",
+                        horizontal: "center",
+                    },
+                    border: {
+                        top: {style: "thin"},
+                        bottom: {style: "thin"},
+                        left: {style: "thin"},
+                        right: {style: "thin"},
+                    },
+                    padding: {
+                        top: 2,
+                        bottom: 2,
+                        left: 5,
+                        right: 5,
+                    },
+                };
+            }
+        }
+
+        const wb = utils.book_new();
         utils.book_append_sheet(wb, ws, "SheetUser");
         writeFile(wb, "Data Mitra.xlsx");
     };
@@ -177,10 +278,10 @@ function TableComponent() {
                                 <td className="table-down text-[#FD0404]">
                                     {item.status === 'pending' ? (
                                         <>
-                                            <button onClick={() => handleAcceptUser(item.id)}>
+                                            <button onClick={() => handleAcceptUser(item.id, item.email,item['nama toko'])}>
                                                 <FontAwesomeIcon icon={faCheckCircle}/>
                                             </button>
-                                            <button className={"ml-4"} onClick={() => handleRejectMitra(item.id)}>
+                                            <button className={"ml-4"} onClick={() => handleRejectMitra(item.id, item.email,item['nama toko'])}>
                                                 <FontAwesomeIcon icon={faCircleXmark}/>
                                             </button>
                                         </>
